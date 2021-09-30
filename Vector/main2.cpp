@@ -69,5 +69,8 @@ int main()
 	P(f.size());
 	P(s2.size());
 	P(f2.size());
+
+	P(s2.at(6));
+	P(f2.at(6));
 	return 0;
 }

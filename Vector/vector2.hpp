@@ -15,7 +15,7 @@ namespace ft
             size_t	_size;
             size_t 	_capacity;
 			Alloc 	_base;
-			T* _ptr;
+			T* 		_ptr;
 
         public:
             /////////////////// Typedef /////////////////////////////////////
@@ -61,6 +61,31 @@ namespace ft
 			allocator_type getAllocator(void) const { return _base; }
 			size_t size(void) const { return _size; }
 			size_t max_size(void) const { return _base.max_size(); }
+			void reserve(size_type n)
+			{
+				pointer ptr;
+				allocator_type cpy;
+				size_t i = 0;
+
+				if (n > this->_capacity)
+				{
+					ptr = cpy.allocate(this->_capacity);
+					while (i < this->_capacity)
+					{
+						cpy.construct(ptr + i, *(this->_ptr + i));
+						i++;
+					}
+					// _base.deallocate(this->_ptr, _size);
+					this->_ptr = this->_base.allocate(n);
+					i = 0;
+					while (i < this->_capacity)
+					{
+						this->_base.construct(this->_ptr + i, *(ptr + i));
+						i++;
+					}
+					this->_capacity = n;
+				}
+			}
 			void resize(size_type n, value_type val = value_type())
 			{
 				pointer ptr;
@@ -90,7 +115,7 @@ namespace ft
 				
 				if (n > this->_size)
 				{
-					this->_base.reserve(n);
+					// this->_base.reserve(n);
 					i = this->_size;
 					while (i < this->_capacity)
 					{
@@ -103,7 +128,7 @@ namespace ft
 					ptr = cpy.allocate(n);
 					while (i < n)
 					{
-						cpy.construct(ptr + i, *(this->ptr + i));
+						cpy.construct(ptr + i, *(this->_ptr + i));
 						i++;
 					}
 					// _base.deallocate(this->_ptr, _size);
@@ -126,31 +151,15 @@ namespace ft
 					return true;
 				return false; 
 			}
-			void reserve(size_type n)
-			{
-				pointer ptr;
-				allocator_type cpy;
-				size_t i = 0;
+			
 
-				if (n > this->_capacity)
-				{
-					ptr = cpy.allocate(this->_capacity);
-					while (i < this->_capacity)
-					{
-						cpy.construct(ptr + i, *(this->_ptr + i));
-						i++;
-					}
-					// _base.deallocate(this->_ptr, _size);
-					this->_ptr = this->_base.allocate(n);
-					i = 0;
-					while (i < this->_capacity)
-					{
-						this->_base.construct(this->_ptr + i, *(ptr + i));
-						i++;
-					}
-					this->_capacity = n;
-				}
-			}
+			//////////////////  /////////////////////////////////
+			reference at(size_type n) { return *(this->_ptr + n - 1); }
+			// const_reference at(size_type n) const
+			// {
+
+			// 	return const this->_ptr + n - 1
+			// }
 	};
 }
 
