@@ -61,16 +61,19 @@ int main()
 	P(s2.capacity());
 	P(f2.capacity());
 	P("________________________________resize____________________________________");
-	s.resize(7, "heyyy");
-	f.resize(7, "heyyy");
-	s2.resize(7, "heyyy");
-	f2.resize(7, "heyyy");
+	s.resize(4, "heyyy");
+	f.resize(4, "heyyy");
+	s2.resize(4, "heyyy");
+	f2.resize(4, "heyyy");
 	P(s.size());
 	P(f.size());
 	P(s2.size());
 	P(f2.size());
 
+	// no try catch => abort if error
 	P(s2.at(6));
 	P(f2.at(6));
+	P("________________________________Push back____________________________________");
+
 	return 0;
 }

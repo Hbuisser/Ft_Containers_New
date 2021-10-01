@@ -34,15 +34,18 @@ namespace ft
 			typedef size_t										size_type;
 
 			////////////////// Constructors /////////////////////////////////
-			explicit vector(const allocator_type& alloc = allocator_type()) : _base(alloc), _size(0), _capacity(0) {}
+			explicit vector(const allocator_type& alloc = allocator_type()) : _base(alloc), _size(0), _capacity(0)
+			{
+				this->_ptr = this->_base.allocate(0);
+			}
 			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _base(alloc), _size(n), _capacity(n)
 			{
-				_ptr = _base.allocate(n);
+				this->_ptr = this->_base.allocate(n);
 				size_t i = 0;
 
 				while (i < n)
 				{
-					_base.construct(_ptr + i, val);
+					this->_base.construct(this->_ptr + i, val);
 					i++;
 				}
 			}
@@ -55,96 +58,95 @@ namespace ft
 			vector(const vector &x) : _base(x._base), _size(x._size) {};
 			virtual ~vector()
 			{
-			// 	_base.deallocate(_base, _size);
+				this->clear();
+				_base.deallocate(this->_ptr, this->_capacity);
 			}
+			vector & operator=(const vector & x)
+			{
+				size_t i = 0;
 
+				// if (*this != &x)
+				{
+					this->clear();
+					this->_base.deallocate(this->_ptr, this->_capacity);
+					this->_ptr = this->_base.allocate(x._capacity);
+					while (i < x._size)
+					{
+						this->_base.construct(this->_ptr + i, *(x._ptr + i));
+						i++;
+					}
+					this->_size = x._size;
+					this->_capacity = x._capacity;
+				}
+				return *this;
+			}
+			/*Iterators*/
+			/*
+			iterator begin( void );
+			const_iterator begin( void ) const;
+			iterator end( void );
+			const_iterator end( void ) const;
+			reverse_iterator rbegin( void );
+			const_reverse_iterator rbegin( void ) const;
+			reverse_iterator rend( void );
+			const_reverse_iterator rend( void ) const;
+			*/
 			allocator_type getAllocator(void) const { return _base; }
+			/* Capacity */
 			size_t size(void) const { return _size; }
 			size_t max_size(void) const { return _base.max_size(); }
 			void reserve(size_type n)
 			{
-				pointer ptr;
-				allocator_type cpy;
-				size_t i = 0;
-
 				if (n > this->_capacity)
 				{
-					ptr = cpy.allocate(this->_capacity);
-					while (i < this->_capacity)
-					{
-						cpy.construct(ptr + i, *(this->_ptr + i));
-						i++;
-					}
-					// _base.deallocate(this->_ptr, _size);
-					this->_ptr = this->_base.allocate(n);
+					size_t i;
+					vector cpy;
+
 					i = 0;
-					while (i < this->_capacity)
+				   	cpy = *this;
+					this->clear();
+					this->_base.deallocate(this->_ptr, this->_capacity);
+					this->_ptr = this->_base.allocate(n);
+					while (i < cpy._size)
 					{
-						this->_base.construct(this->_ptr + i, *(ptr + i));
+						this->_base.construct(this->_ptr + i, *(cpy._ptr + i));
 						i++;
 					}
+					this->_size = cpy._size;
 					this->_capacity = n;
 				}
 			}
 			void resize(size_type n, value_type val = value_type())
 			{
-				pointer ptr;
-				allocator_type cpy;
 				size_t i = 0;
-
-				// ptr = cpy.allocate(this->_size);
-				// while (i < this->_size)
-				// {
-				// 	cpy.construct(ptr + i, *(this->_ptr + i));
-				// 	i++;
-				// }
-				// // _base.deallocate(this->_ptr, _size);
-				// this->_ptr = _base.allocate(n);
-				// i = 0;
-				// while (i < this->_size)
-				// {
-				// 	_base.construct(this->_ptr + i, *(ptr + i));
-				// 	i++;
-				// }
-				// while (i < n)
-				// {
-				// 	_base.construct(this->_ptr + i, val);
-				// 	i++;
-				// }
-				// this->_size = n;
 				
 				if (n > this->_size)
 				{
-					// this->_base.reserve(n);
+					this->reserve(n);
 					i = this->_size;
-					while (i < this->_capacity)
+					while (i < n)
 					{
-						_base.construct(this->_ptr + i, val);
+						this->_base.construct(this->_ptr + i, val);
 						i++;
 					}
 				}
 				else
 				{
-					ptr = cpy.allocate(n);
-					while (i < n)
+					i = n;
+					while(i < this->_size)
 					{
-						cpy.construct(ptr + i, *(this->_ptr + i));
-						i++;
-					}
-					// _base.deallocate(this->_ptr, _size);
-					this->_ptr = this->_base.allocate(n);
-					i = 0;
-					while (i < n)
-					{
-						this->_base.construct(this->_ptr + i, *(ptr + i));
+						this->_base.destroy(this->_ptr + i);
 						i++;
 					}
 				}
 				this->_size = n;
-				if (n > this->_capacity)
-					this->_capacity = n;
 			}
-			size_type capacity() const { return _size; }
+			///////////////// Element acces ////////////////////////
+			reference operator[]( size_type n )
+			{
+				return this->at(n);
+			}
+			size_type capacity() const { return _capacity; }
 			bool empty() const 
 			{ 
 				if (_size == 0)
@@ -154,12 +156,57 @@ namespace ft
 			
 
 			//////////////////  /////////////////////////////////
-			reference at(size_type n) { return *(this->_ptr + n - 1); }
-			// const_reference at(size_type n) const
-			// {
-
-			// 	return const this->_ptr + n - 1
+			reference at(size_type n)
+			{
+				if (n >= this->_size)
+					throw std::out_of_range("vector");
+				else
+					return *(this->_ptr + n);
+			}
+			//const_reference at( size_type n )
+			//{
+			//	if ( n >= this->_size )
+			//		throw std::out_of_range;
+			//	else
+			//		return const *(this->_ptr + n);
 			// }
+			reference front( void )
+			{
+				return this->_ptr;
+			}
+			//const_reference front( size_type n )
+			//{
+			//	return const *(this->_ptr);
+			//}
+			reference back( void )
+			{
+				return *(this->_ptr + this->_size - 1);
+			}
+			//const_reference back( size_type n );
+			//{
+			//	return const *(ptr + this->_size);
+			//}
+			///////////////// Modifiers //////////////
+			void push_back (const value_type& val)
+			{
+				this->_base.construct(this->_ptr + this->size + 1, val);
+				if (this->_capacity == this->_size)
+					this->reserve(this->_size + 1);
+				this->size =+ 1;
+			}
+			void clear( void )
+			{				
+				size_t i;
+				
+				i = 0;
+				while (i < this->_size)
+				{
+					this->_base.destroy(this->_ptr + i);
+					i++;
+				}
+				this->_size = 0;
+			}
+
 	};
 }
 
