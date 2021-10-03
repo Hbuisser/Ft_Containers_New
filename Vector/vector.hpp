@@ -21,12 +21,12 @@ namespace ft
             /////////////////////////////////////////////////////// Typedef /////////////////////////////////////
 			typedef T											value_type;
 			typedef Alloc   									allocator_type;
-			typedef typename allocator_type::reference					reference;
-			typedef typename allocator_type::const_reference				const_reference;
-			typedef	typename allocator_type::pointer 					pointer;
-			typedef typename allocator_type::const_pointer 				const_pointer;
+			typedef typename allocator_type::reference			reference;
+			typedef typename allocator_type::const_reference	const_reference;
+			typedef	typename allocator_type::pointer 			pointer;
+			typedef typename allocator_type::const_pointer 		const_pointer;
 			// a changer std
-			// typedef std::iterator<value_type>						iterator;
+			typedef std::iterator<value_type>					iterator;
 			// typedef std::iterator<const value_type>					const_iterator;
 			// typedef ft::reverse_iterator<value_type>			reverse_iterator;
 			// typedef ft::reverse_iterator<const value_type>		const_reverse_iterator;
@@ -49,14 +49,14 @@ namespace ft
 			template<typename InputIterator> 
 			vector(InputIterator first, InputIterator last)
 			{
-				_size = 0;
+				this->_size = 0;
 				// assign(first, last);
 			}
 			vector(const vector &x) : _base(x._base), _size(x._size) {};
 			virtual ~vector()
 			{
 				this->clear();
-				_base.deallocate(this->_ptr, this->_capacity);
+				this->_base.deallocate(this->_ptr, this->_capacity);
 			}
 			vector & operator=(const vector & x)
 			{
@@ -78,19 +78,17 @@ namespace ft
 				return *this;
 			}
 			///////////////////////////////////////////////////// Iterators /////////////////////////////////////////
-			/*
-			iterator begin( void );
-			const_iterator begin( void ) const;
-			iterator end( void );
-			const_iterator end( void ) const;
-			reverse_iterator rbegin( void );
-			const_reverse_iterator rbegin( void ) const;
-			reverse_iterator rend( void );
-			const_reverse_iterator rend( void ) const;
-			*/
+			// iterator begin( void );
+			// const_iterator begin( void ) const;
+			// iterator end( void );
+			// const_iterator end( void ) const;
+			// reverse_iterator rbegin( void );
+			// const_reverse_iterator rbegin( void ) const;
+			// reverse_iterator rend( void );
+			// const_reverse_iterator rend( void ) const;
 			/////////////////////////////////////////////////////// Capacity /////////////////////////
-			size_t size(void) const { return _size; }
-			size_t max_size(void) const { return _base.max_size(); }
+			size_t size(void) const { return this->_size; }
+			size_t max_size(void) const { return this->_base.max_size(); }
 			void reserve(size_type n)
 			{
 				if (n > this->_capacity)
@@ -145,10 +143,7 @@ namespace ft
 				this->_size = n;
 			}
 			/////////////////////////////////////////////////////// Element acces ////////////////////////
-			reference operator[]( size_type n )
-			{
-				return this->at(n);
-			}
+			reference operator[]( size_type n ) { return this->at(n); }
 			reference at(size_type n)
 			{
 				if (n >= this->_size)
@@ -168,6 +163,23 @@ namespace ft
 			reference back() { return *(this->_ptr + this->_size - 1); }
 			const_reference back() const { return *(this->_ptr + this->_size - 1); }
 			//////////////////////////////////////////////////////// Modifiers /////////////////////////////////////
+			// template <class InputIterator>
+  			// void assign(InputIterator first, InputIterator last);
+			void assign(size_type n, const value_type& val)
+			{
+				size_t i = 0;
+				
+				this->clear();
+				this->_base.deallocate(this->_ptr, this->_capacity);
+				this->_ptr = this->_base.allocate(n);
+				while (i < n)
+				{
+					this->_base.construct(this->_ptr + i, val);
+					i++;
+				}
+				this->_size = n;
+				this->_capacity = n;
+			}
 			void push_back(const value_type& val)
 			{
 				if (this->_capacity == this->_size)
@@ -175,12 +187,23 @@ namespace ft
 				this->_base.construct(this->_ptr + this->_size, val);
 				this->_size = this->_size + 1;
 			}
-			void pop_back()
+			void pop_back() { this->resize(this->_size - 1); }
+			// iterator insert (iterator position, const value_type& val);
+			// void insert (iterator position, size_type n, const value_type& val);
+			// template <class InputIterator>
+			// void insert (iterator position, InputIterator first, InputIterator last);
+			// iterator erase (iterator position);
+			// iterator erase (iterator first, iterator last);
+			void swap(vector& x)
 			{
-				this->resize(this->_size - 1);
-				//this->_size = this->_size - 1;
+				vector tmp;
+				tmp = *this;
+				this->clear();
+				*this = x;
+				x.clear();
+				x = tmp;
 			}
-			void clear( void )
+			void clear(void)
 			{				
 				size_t i;
 				
@@ -192,7 +215,7 @@ namespace ft
 				}
 				this->_size = 0;
 			}
-			////////////////////////////////////////////////// Others ////////////////////////////////////
+			////////////////////////////////////////////////// Allocator ////////////////////////////////////
 			allocator_type getAllocator(void) const { return _base; }
 	};
 }
