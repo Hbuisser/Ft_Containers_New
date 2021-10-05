@@ -3,6 +3,7 @@
 #include "vector.hpp"
 
 #define P(x) std::cout << x << std::endl
+
 #define RED "\e[0;31m"
 #define GRN "\e[0;32m"
 #define NC "\e[0m"
@@ -53,6 +54,7 @@ int main()
 	P("________________________________resize____________________________________");
 	s.resize(7, "heyyy");
 	f.resize(7, "heyyy");
+
 	s2.resize(7, "heyyy");
 	f2.resize(7, "heyyy");
 	P("resize: " << s.size());
@@ -102,6 +104,9 @@ int main()
 	P("________________________________Insert__________________________________");
 	P("________________________________Erase___________________________________");
 	P("________________________________Swap___________________________________");
+	// std::string ref1 = s2.at(0);
+    // std::string ref2 = f2.at(0);
+
 	std::vector<std::string> s3(10, "yoyo");
 	ft::vector<std::string> f3(10, "yoyo");
 	s2.swap(s3);
@@ -116,11 +121,26 @@ int main()
 	P("size: " << f3.size());
 	P("------------------------------Iterators----------------------------------");
 	P("-------------------------------------------------------------------------");
-	P("________________________________Begin____________________________________");
-	std::vector<std::string>::iterator s_iter_begin = s2.begin();
-    ft::vector<std::string>::iterator f_iter_begin = f2.begin();
+	// P("________________________________Begin____________________________________");
+	// std::vector<std::string>::iterator s_iter_begin = s2.begin();
+    // ft::vector<std::string>::iterator f_iter_begin = f2.begin();
 	
-	P("begin = " << *s_iter_begin);
-	P("begin = " << *f_iter_begin);
+	// P("begin = " << *s_iter_begin);
+	// P("begin = " << *f_iter_begin);
+	// P("________________________________End____________________________________");
+	// std::vector<std::string>::iterator s_iter_end = s2.end();
+    // ft::vector<std::string>::iterator f_iter_end = f2.end();
+	
+	// P("end = " << *s_iter_end);
+	// P("end = " << *f_iter_end);
+	P("-------------------------------OPERATORS------------------------------------");
+	P("----------------------------------------------------------------------------");
+    P("__________________________________==________________________________________");
+    std::vector<std::string>  s5(s);
+    ft::vector<std::string>  f5(f);
+
+    P("operator '==' : " << (s == s5));
+	// f == f5;
+	P("operator '==' : " << (f == f5));
 	return 0;
 }

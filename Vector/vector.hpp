@@ -5,8 +5,10 @@
 #include <limits>
 #include <iterator>
 
-#include "vector_iterator.hpp"
+#include "vector_iterator_new.hpp"
 
+// https://internalpointers.com/post/writing-custom-iterators-modern-cpp
+// https://www.it-swarm-fr.com/fr/c%2B%2B/ecrire-votre-propre-conteneur-stl/939838072/
 
 namespace ft
 {
@@ -27,12 +29,81 @@ namespace ft
 			typedef typename allocator_type::const_reference	const_reference;
 			typedef	typename allocator_type::pointer 			pointer;
 			typedef typename allocator_type::const_pointer 		const_pointer;
-			typedef ft::iterator<value_type>					iterator;
-			typedef ft::iterator<const value_type>				const_iterator;
-			typedef ft::reverse_iterator<value_type>			reverse_iterator;
-			typedef ft::reverse_iterator<const value_type>		const_reverse_iterator;
+			typedef ft::It<value_type>							iterator;
+			typedef ft::It<const value_type>					const_iterator;
+			// typedef ft::reverse_iterator<value_type>			reverse_iterator;
+			// typedef ft::reverse_iterator<const value_type>		const_reverse_iterator;
 			// typedef iterator_traits<iterator>::difference_type	difference_type;
 			typedef size_t										size_type;
+
+			////////////////////////////////////////////////////////// Iterators //////////////////////////////////
+			class It : public ft::iterator< ft::random_access_iterator_tag, value_type, difference_type, pointer, reference >
+			{
+				private:
+					pointer _ptr;
+​
+				public:
+					iterator(pointer ptr = nullptr) : m_ptr(ptr) {}
+					~iterator() { _ptr = nullptr; }
+					reference operator*() const { return *m_ptr; }
+					pointer operator->() { return m_ptr; }
+					iterator& operator++() { m_ptr++; return *this; }  
+					iterator operator++(int) { iterator tmp = *this; ++(*this); return tmp; }
+					iterator& operator--() { m_ptr--; return *this; }  
+					iterator operator--(int) { iterator tmp = *this; --(*this); return tmp; }
+					bool operator==(const iterator& a, const iterator& b) { return a.m_ptr == b.m_ptr; }
+					bool operator!=(const iterator& a, const iterator& b) { return a.m_ptr != b.m_ptr; }
+					iterator& operator=(const iterator & x) { this->_ptr = x._ptr; return *this; }
+					iterator& operator+=(iterator n) const 
+					{
+						difference_type m;
+
+						m = this->_ptr - n._ptr;
+						if (m >= 0) 
+						{
+							while (m--) 
+								++this->_ptr;
+						}
+						else
+						{
+							while (m++) 
+								--this->_ptr;
+						}
+						return this->_ptr;
+					}
+					iterator& operator+(const iterator & x) const
+					{
+						iterator temp = *this;
+						return temp += x;
+					}
+					iterator& operator-=(const iterator & x) const
+					{
+						difference_type m;
+
+						m = this->_ptr - n._ptr;
+						if (m >= 0) 
+						{
+							while (m--) 
+								--this->_ptr;
+						}
+						else
+						{
+							while (m++) 
+								++this->_ptr;
+						}
+						return this->_ptr;
+					}
+					iterator& operator-(const iterator & x) const
+					{
+						iterator temp = *this;
+						return temp -= x;
+					}
+					bool operator<(const iterator & x) const { return this->_ptr < x._ptr; }
+					bool operator<=(const iterator & x) const { return this->_ptr <= x._ptr; }
+					bool operator>(const iterator & x) const { return this->_ptr > x._ptr; }
+					bool operator>=(const iterator & x) const { return this->_ptr >= x._ptr; }
+					iterator& operator[](difference_type n) { return *this->_ptr + n; }
+			}
 
 			/////////////////////////////////////////////////////// Constructors /////////////////////////////////
 			explicit vector(const allocator_type& alloc = allocator_type()) : _base(alloc), _size(0), _capacity(0) { this->_ptr = this->_base.allocate(0); }
@@ -53,7 +124,11 @@ namespace ft
 				this->_size = 0;
 				// assign(first, last);
 			}
-			vector(const vector &x) : _base(x._base), _size(x._size) {};
+			vector(const vector &x) : _base(allocator_type()), _size(x._size), _capacity(x._capacity) 
+			{
+				this->_ptr = this->_base.allocate(0);
+				*this = x;
+			}
 			virtual ~vector()
 			{
 				this->clear();
@@ -81,8 +156,8 @@ namespace ft
 			}
 			///////////////////////////////////////////////////// Iterators /////////////////////////////////////////
 			iterator begin(void) { return iterator(_ptr); }
-			// const_iterator begin(void) const;
-			// iterator end(void);
+			const_iterator begin(void) const { return const_iterator(_ptr); }
+			iterator end(void) { return iterator(_ptr + _size);}
 			// const_iterator end(void) const;
 			// reverse_iterator rbegin(void);
 			// const_reverse_iterator rbegin(void) const;
@@ -199,6 +274,7 @@ namespace ft
 			void swap(vector& x)
 			{
 				vector tmp;
+
 				tmp = *this;
 				this->clear();
 				*this = x;
@@ -220,6 +296,56 @@ namespace ft
 			////////////////////////////////////////////////// Allocator ////////////////////////////////////
 			allocator_type getAllocator(void) const { return _base; }
 	};
+	template< class T, class Alloc >
+	bool operator==(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs)
+	{
+		size_t i = lhs.size();
+		size_t j = rhs.size();
+		size_t count = 0;
+
+		// T* ptr1 = lhs.at(0);
+		// T* ptr2 = rhs.at(0);
+
+		// if (i != j)
+		// 	return false;
+		// while (count < i)
+		// {
+		// 	if (ptr1 + count != ptr2 + count)
+		// 		return false;
+		// 	count++;
+		// }
+		// return true;
+	}
+	// template< class T, class Alloc >
+	// constexpr bool operator==(const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs)
+	// {
+		
+	// }
+	// template< class T, class Alloc >
+	// bool operator!=(const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs)
+	// {
+
+	// }
+	// template< class T, class Alloc >
+	// bool operator<(const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs)
+	// {
+
+	// }
+	// template< class T, class Alloc >
+	// bool operator<=(const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs)
+	// {
+
+	// }
+	// template< class T, class Alloc >
+	// bool operator>(const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs)
+	// {
+
+	// }
+	// template< class T, class Alloc >
+	// bool operator>=(const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs)
+	// {
+
+	// }
 }
 
 
