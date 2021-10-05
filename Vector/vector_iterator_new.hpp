@@ -62,47 +62,167 @@ namespace ft
     		typedef ft::random_access_iterator_tag iterator_category;
 	};
 
+    /*legacy*/
+    // template<class Category = ft::random_access_iterator_tag(), class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
+    template<class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
+    class It
+    {
+        private:
+            Pointer _ptr;
+        public:
+            typedef T         value_type;
+            typedef Distance  difference_type;
+            typedef Pointer   pointer;
+            typedef Reference reference;
+            typedef Category  iterator_category;
+
+            It(pointer ptr = nullptr) : _ptr(ptr) {}
+            ~It() { _ptr = nullptr; }
+            reference operator*() const { return *_ptr; }
+            pointer operator->() { return _ptr; }
+            It& operator++() { _ptr++; return *this; }  
+            It operator++(int) { It tmp = *this; ++(*this); return tmp; }
+            It& operator--() { _ptr--; return *this; }  
+            It operator--(int) { It tmp = *this; --(*this); return tmp; }
+            // friend of non member overload
+            friend bool operator==(const It& a, const It& b) { return a._ptr == b._ptr; }
+            friend bool operator!=(const It& a, const It& b) { return a._ptr != b._ptr; }
+            It& operator=(const It & x) { this->_ptr = x._ptr; return *this; }
+            It& operator+=(difference_type n) const 
+            {
+                difference_type m;
+
+                m = this->_ptr - n._ptr;
+                if (m >= 0) 
+                {
+                    while (m--) 
+                        ++this->_ptr;
+                }
+                else
+                {
+                    while (m++) 
+                        --this->_ptr;
+                }
+                return this->_ptr;
+            }
+            It& operator+(const It & x) const
+            {
+                It temp = *this;
+                return temp += x;
+            }
+            It& operator-=(const It & x) const
+            {
+                difference_type m;
+
+                m = this->_ptr - n._ptr;
+                if (m >= 0) 
+                {
+                    while (m--) 
+                        --this->_ptr;
+                }
+                else
+                {
+                    while (m++) 
+                        ++this->_ptr;
+                }
+                return this->_ptr;
+            }
+            It& operator-(const It & x) const
+            {
+                It temp = *this;
+                return temp -= x;
+            }
+            bool operator<(const It & x) const { return this->_ptr < x._ptr; }
+            bool operator<=(const It & x) const { return this->_ptr <= x._ptr; }
+            bool operator>(const It & x) const { return this->_ptr > x._ptr; }
+            bool operator>=(const It & x) const { return this->_ptr >= x._ptr; }
+            It& operator[](difference_type n) { return *this->_ptr + n; }
+    }
+
     /*Reverse iterator*/
 	template <class Iterator> 
 	class reverse_iterator
 	{
-        protected:
-			iterator_type current;
 		public:
-			/*Constructor and destructor*/
-			reverse_iterator();
-			explicit reverse_iterator (iterator_type it) : current( it );
-			template <class Iter>
-  			reverse_iterator (const reverse_iterator<Iter>& rev_it) : current( rev_it.current );
-​
 			/*Member types*/
 			typedef Iterator iterator_type;
-    		typedef iterator_traits<Iterator>::iterator_category iterator_category;
-    		typedef iterator_traits<Iterator>::value_type value_type;
-    		typedef iterator_traits<Iterator>::difference_type difference_type;
-    		typedef iterator_traits<Iterator>::pointer pointer;
-    		typedef iterator_traits<Iterator>::reference reference;
-​
+    		typedef typename iterator_traits<Iterator>::iterator_category iterator_category;
+    		typedef typename iterator_traits<Iterator>::value_type value_type;
+    		typedef typename iterator_traits<Iterator>::difference_type difference_type;
+    		typedef typename iterator_traits<Iterator>::pointer pointer;
+    		typedef typename iterator_traits<Iterator>::reference reference;
+
+			/*Constructor and destructor*/
+			reverse_iterator() {}
+			explicit reverse_iterator (iterator_type it) : current( it ) {}
+			template <class Iter>
+  			reverse_iterator (const reverse_iterator<Iter>& rev_it) : current( rev_it.current ) {}
+
 			/*Member functions*/
-			iterator_type base() const;
+			iterator_type base() const
 			{
 				return this->current;
 			}
-			reference operator*() const;
+			reference operator*() const
 			{
-				return &this->current;
+				return *this->current;
 			}
-			reverse_iterator operator+(difference_type n) const;
-			reverse_iterator& operator++();
-			reverse_iterator operator++(int);
-			reverse_iterator& operator+= (difference_type n);
-			reverse_iterator operator-(difference_type n) const;
-			reverse_iterator& operator--();
-			reverse_iterator  operator--(int);
-			reverse_iterator& operator-=(difference_type n);
-			pointer operator->() const;
-			reference operator[](difference_type n) const;
+			reverse_iterator operator+(difference_type n) const { }
+			reverse_iterator& operator++() {}
+			reverse_iterator operator++(int) {}
+			reverse_iterator& operator+= (difference_type n) {}
+			reverse_iterator operator-(difference_type n) const {}
+			reverse_iterator& operator--() {}
+			reverse_iterator  operator--(int) {}
+			reverse_iterator& operator-=(difference_type n) {}
+			pointer operator->() const {}
+			reference operator[](difference_type n) const {}
+        protected:
+			iterator_type current;
+    };
+    // template< class Iterator1, class Iterator2 >
+    // bool operator==( const std::reverse_iterator<Iterator1>& lhs, const std::reverse_iterator<Iterator2>& rhs );
 
+    // template< class Iterator1, class Iterator2 >
+    // constexpr bool operator==( const std::reverse_iterator<Iterator1>& lhs, const std::reverse_iterator<Iterator2>& rhs );
+
+        
+    // template< class Iterator1, class Iterator2 >
+    // bool operator!=( const std::reverse_iterator<Iterator1>& lhs, const std::reverse_iterator<Iterator2>& rhs );
+
+    // template< class Iterator1, class Iterator2 >
+    // constexpr bool operator!=( const std::reverse_iterator<Iterator1>& lhs, const std::reverse_iterator<Iterator2>& rhs );
+
+        
+    // template< class Iterator1, class Iterator2 >
+    // bool operator<( const std::reverse_iterator<Iterator1>& lhs, const std::reverse_iterator<Iterator2>& rhs );
+
+    // template< class Iterator1, class Iterator2 >
+    // constexpr bool operator<( const std::reverse_iterator<Iterator1>& lhs, const std::reverse_iterator<Iterator2>& rhs );
+
+        
+    // template< class Iterator1, class Iterator2 >
+    // bool operator<=( const std::reverse_iterator<Iterator1>& lhs, const std::reverse_iterator<Iterator2>& rhs );
+
+    // template< class Iterator1, class Iterator2 >
+    // constexpr bool operator<=( const std::reverse_iterator<Iterator1>& lhs, const std::reverse_iterator<Iterator2>& rhs );
+
+    // template< class Iterator1, class Iterator2 >
+    // bool operator>( const std::reverse_iterator<Iterator1>& lhs, const std::reverse_iterator<Iterator2>& rhs );
+
+    // template< class Iterator1, class Iterator2 >
+    // constexpr bool operator>( const std::reverse_iterator<Iterator1>& lhs, const std::reverse_iterator<Iterator2>& rhs );
+
+        
+    // template< class Iterator1, class Iterator2 >
+    // bool operator>=( const std::reverse_iterator<Iterator1>& lhs, const std::reverse_iterator<Iterator2>& rhs );
+
+    // template< class Iterator1, class Iterator2 >
+    // constexpr bool operator>=( const std::reverse_iterator<Iterator1>& lhs, const std::reverse_iterator<Iterator2>& rhs );
+
+    // template< class Iterator1, std::three_way_comparable_with<Iterator1> Iterator2 >
+    // constexpr std::compare_three_way_result_t<Iterator1, Iterator2>
+    //     operator<=>( const std::reverse_iterator<Iterator1>& lhs, const std::reverse_iterator<Iterator2>& rhs );
 }
 
 #endif

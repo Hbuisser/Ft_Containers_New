@@ -29,81 +29,12 @@ namespace ft
 			typedef typename allocator_type::const_reference	const_reference;
 			typedef	typename allocator_type::pointer 			pointer;
 			typedef typename allocator_type::const_pointer 		const_pointer;
-			typedef ft::It<value_type>							iterator;
-			typedef ft::It<const value_type>					const_iterator;
-			// typedef ft::reverse_iterator<value_type>			reverse_iterator;
-			// typedef ft::reverse_iterator<const value_type>		const_reverse_iterator;
-			// typedef iterator_traits<iterator>::difference_type	difference_type;
+			typedef It<value_type>								iterator;
+			typedef It<const value_type>						const_iterator;
+			// // typedef ft::reverse_iterator<value_type>			reverse_iterator;
+			// // typedef ft::reverse_iterator<const value_type>		const_reverse_iterator;
+			typedef ft::iterator_traits<iterator>::difference_type	difference_type;
 			typedef size_t										size_type;
-
-			////////////////////////////////////////////////////////// Iterators //////////////////////////////////
-			class It : public ft::iterator< ft::random_access_iterator_tag, value_type, difference_type, pointer, reference >
-			{
-				private:
-					pointer _ptr;
-​
-				public:
-					iterator(pointer ptr = nullptr) : m_ptr(ptr) {}
-					~iterator() { _ptr = nullptr; }
-					reference operator*() const { return *m_ptr; }
-					pointer operator->() { return m_ptr; }
-					iterator& operator++() { m_ptr++; return *this; }  
-					iterator operator++(int) { iterator tmp = *this; ++(*this); return tmp; }
-					iterator& operator--() { m_ptr--; return *this; }  
-					iterator operator--(int) { iterator tmp = *this; --(*this); return tmp; }
-					bool operator==(const iterator& a, const iterator& b) { return a.m_ptr == b.m_ptr; }
-					bool operator!=(const iterator& a, const iterator& b) { return a.m_ptr != b.m_ptr; }
-					iterator& operator=(const iterator & x) { this->_ptr = x._ptr; return *this; }
-					iterator& operator+=(iterator n) const 
-					{
-						difference_type m;
-
-						m = this->_ptr - n._ptr;
-						if (m >= 0) 
-						{
-							while (m--) 
-								++this->_ptr;
-						}
-						else
-						{
-							while (m++) 
-								--this->_ptr;
-						}
-						return this->_ptr;
-					}
-					iterator& operator+(const iterator & x) const
-					{
-						iterator temp = *this;
-						return temp += x;
-					}
-					iterator& operator-=(const iterator & x) const
-					{
-						difference_type m;
-
-						m = this->_ptr - n._ptr;
-						if (m >= 0) 
-						{
-							while (m--) 
-								--this->_ptr;
-						}
-						else
-						{
-							while (m++) 
-								++this->_ptr;
-						}
-						return this->_ptr;
-					}
-					iterator& operator-(const iterator & x) const
-					{
-						iterator temp = *this;
-						return temp -= x;
-					}
-					bool operator<(const iterator & x) const { return this->_ptr < x._ptr; }
-					bool operator<=(const iterator & x) const { return this->_ptr <= x._ptr; }
-					bool operator>(const iterator & x) const { return this->_ptr > x._ptr; }
-					bool operator>=(const iterator & x) const { return this->_ptr >= x._ptr; }
-					iterator& operator[](difference_type n) { return *this->_ptr + n; }
-			}
 
 			/////////////////////////////////////////////////////// Constructors /////////////////////////////////
 			explicit vector(const allocator_type& alloc = allocator_type()) : _base(alloc), _size(0), _capacity(0) { this->_ptr = this->_base.allocate(0); }
