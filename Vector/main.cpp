@@ -121,18 +121,18 @@ int main()
 	P("size: " << f3.size());
 	P("------------------------------Iterators----------------------------------");
 	P("-------------------------------------------------------------------------");
-	// P("________________________________Begin____________________________________");
-	// std::vector<std::string>::iterator s_iter_begin = s2.begin();
-    // ft::vector<std::string>::iterator f_iter_begin = f2.begin();
+	P("________________________________Begin____________________________________");
+	std::vector<std::string>::iterator s_iter_begin = s2.begin();
+    ft::vector<std::string>::iterator f_iter_begin = f2.begin();
 	
-	// P("begin = " << *s_iter_begin);
-	// P("begin = " << *f_iter_begin);
-	// P("________________________________End____________________________________");
-	// std::vector<std::string>::iterator s_iter_end = s2.end();
-    // ft::vector<std::string>::iterator f_iter_end = f2.end();
+	P("begin = " << *s_iter_begin);
+	P("begin = " << *f_iter_begin);
+	P("________________________________End____________________________________");
+	std::vector<std::string>::iterator s_iter_end = s2.end();
+    ft::vector<std::string>::iterator f_iter_end = f2.end();
 	
-	// P("end = " << *s_iter_end);
-	// P("end = " << *f_iter_end);
+	P("end = " << *s_iter_end);
+	P("end = " << *f_iter_end);
 	P("-------------------------------OPERATORS------------------------------------");
 	P("----------------------------------------------------------------------------");
     P("__________________________________==________________________________________");
@@ -140,7 +140,6 @@ int main()
     ft::vector<std::string>  f5(f);
 
     P("operator '==' : " << (s == s5));
-	// f == f5;
 	P("operator '==' : " << (f == f5));
 	return 0;
 }
