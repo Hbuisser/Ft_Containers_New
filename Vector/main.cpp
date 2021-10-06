@@ -136,10 +136,27 @@ int main()
 	P("-------------------------------OPERATORS------------------------------------");
 	P("----------------------------------------------------------------------------");
     P("__________________________________==________________________________________");
+	std::vector<std::string>  s6;
+    ft::vector<std::string>  f6;
+
+	s6.push_back("Pierre");
+	s6.push_back("est");
+	s6.push_back("une");
+	s6.push_back("grosse");
+	s6.push_back("conne");
+
+	f6.push_back("Pierre");
+	f6.push_back("est");
+	f6.push_back("une");
+	f6.push_back("grosse");
+	f6.push_back("conne");
+
+
+
     std::vector<std::string>  s5(s);
     ft::vector<std::string>  f5(f);
 
-    P("operator '==' : " << (s == s5));
-	P("operator '==' : " << (f == f5));
+    P("operator '==' : " << (s6 == s6));
+	P("operator '==' : " << (f6 == f6));
 	return 0;
 }

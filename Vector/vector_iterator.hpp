@@ -105,10 +105,10 @@ namespace ft
 			It operator-(difference_type n) const
             {
                 It temp = *this;
-                return temp -= x;
+                return temp -= n;
             }
 			It& operator--() { this->_ptr--; return *this; }
-			It  operator--(int) { iterator_type tmp = *this; --(*this); return tmp; }
+			It  operator--(int) { It tmp = *this; --(*this); return tmp; }
 			reference operator[](difference_type n) const { return *(this->_ptr + n); }
     };
 
@@ -159,26 +159,45 @@ namespace ft
     template< class T >
     bool operator==(const ft::It<T>& lhs, const ft::It<T>& rhs)
     {
-        if (lhs->_ptr != rhs->_ptr)
+        if (*lhs != *rhs)
             return false;
         return true;
     }
-    // template< class T >
-    // bool operator!=(const ft::It<T>& lhs, const ft::It<T>& rhs);
-        
-    // template< class T >
-    // bool operator<(const ft::It<T>& lhs, const ft::It<T>& rhs);
-
-    // template< class T >
-    // bool operator<=(const ft::It<T>& lhs, const ft::It<T>& rhs);
-
-    // template< class T >
-    // bool operator>(const ft::It<T>& lhs, const ft::It<T>& rhs);
-
-    // template< class T >
-    // bool operator>=(const ft::It<T>& lhs, const ft::It<T>& rhs);
-
-
+    template< class T >
+    bool operator!=(const ft::It<T>& lhs, const ft::It<T>& rhs)
+    {
+        if (*lhs == *rhs)
+            return false;
+        return true;
+    }  
+    template< class T >
+    bool operator<(const ft::It<T>& lhs, const ft::It<T>& rhs)
+    {
+        if (*lhs < *rhs)
+            return true;
+        return false;
+    }
+    template< class T >
+    bool operator<=(const ft::It<T>& lhs, const ft::It<T>& rhs)
+    {
+        if (*lhs <= *rhs)
+            return true;
+        return false;
+    }
+    template< class T >
+    bool operator>(const ft::It<T>& lhs, const ft::It<T>& rhs)
+    {
+        if (*lhs > *rhs)
+            return true;
+        return false;
+    }
+    template< class T >
+    bool operator>=(const ft::It<T>& lhs, const ft::It<T>& rhs)
+    {
+        if (*lhs >= *rhs)
+            return true;
+        return false;
+    }
 
     /*Non members reverse iterator*/
     template< class Iterator1, class Iterator2 >

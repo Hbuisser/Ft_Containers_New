@@ -31,9 +31,9 @@ namespace ft
 			typedef typename allocator_type::const_pointer 		const_pointer;			
 			typedef It<value_type>								iterator;
 			typedef It<const value_type>						const_iterator;
-			// // typedef ft::reverse_iterator<value_type>			reverse_iterator;
-			// // typedef ft::reverse_iterator<const value_type>		const_reverse_iterator;
-			// typedef typename ft::iterator_traits<iterator>::difference_type	difference_type;
+			typedef ft::reverse_iterator<value_type>				reverse_iterator;
+			typedef ft::reverse_iterator<const value_type>			const_reverse_iterator;
+			typedef typename ft::iterator_traits<iterator>::difference_type		difference_type;
 			typedef size_t										size_type;
 
 			/////////////////////////////////////////////////////// Constructors /////////////////////////////////
@@ -89,7 +89,7 @@ namespace ft
 			iterator begin(void) { return iterator(_ptr); }
 			const_iterator begin(void) const { return const_iterator(_ptr); }
 			iterator end(void) { return iterator(_ptr + _size);}
-			const_iterator end(void) const { return iterator(_ptr + _size);}
+			const_iterator end(void) const { return const_iterator(_ptr + _size); }
 			// reverse_iterator rbegin(void);
 			// const_reverse_iterator rbegin(void) const;
 			// reverse_iterator rend(void);
@@ -228,20 +228,27 @@ namespace ft
 			allocator_type getAllocator(void) const { return _base; }
 	};
 	template< class T, class Alloc >
+	//bool operator==(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs)////////////////////
 	bool operator==(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs)
 	{
+		typename ft::vector<const T>::iterator it1 = lhs.begin();
+		typename ft::vector<const T>::iterator it2 = rhs.begin();
 		size_t count = 0;
-		ft::vector<T>::iterator it1 = lhs.begin();
-		ft::vector<T>::iterator it2 = rhs.begin();
 
 		if (lhs.size() != rhs.size())
 			return false;
-		// while (it1 != lhs.end())
-		// {
-		// 	if (it1 + count != it2 + count)
-		// 		return false;
-		// 	count++;
-		// }
+		while (it1 != lhs.end())
+		{
+			if (it1 + count != it2 + count)
+			{
+				std::cout << *(it1 + count) << std::endl;
+				std::cout << *(it2 + count) << std::endl;
+				std::cout << count << std::endl; 
+				return false;
+			}
+			
+			count++;
+		}
 		return true;
 	}
 	// template< class T, class Alloc >
