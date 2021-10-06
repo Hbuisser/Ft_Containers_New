@@ -19,6 +19,14 @@ std::string verif(T elem)
 		return (" | " RED "[K0]" NC);
 }
 
+template<class T>
+void show_container(T & l)
+{
+	std::cout << "Container : ";
+	for (typename T::iterator it = l.begin(); it != l.end(); it++)
+		std::cout << *it << " << ";
+	std::cout << "-END" << std::endl;
+}
 
 int main()
 {
@@ -32,8 +40,12 @@ int main()
 	P("________________________________default__________________________________");
 	std::vector<std::string> s;
 	ft::vector<std::string> f;
+	show_container(s);
+	show_container(f);
 	std::vector<std::string> s2(5, "hello");
 	ft::vector<std::string> f2(5, "hello");
+	show_container(s2);
+	show_container(f2);
 	P("------------------------------CAPACITY-----------------------------------");
 	P("-------------------------------------------------------------------------");
 	P("________________________________size_____________________________________");
@@ -54,9 +66,13 @@ int main()
 	P("________________________________resize____________________________________");
 	s.resize(7, "heyyy");
 	f.resize(7, "heyyy");
+	show_container(s);
+	show_container(f);
 
 	s2.resize(7, "heyyy");
 	f2.resize(7, "heyyy");
+	show_container(s2);
+	show_container(f2);
 	P("resize: " << s.size());
 	P("resize: " << f.size());
 	P("resize: " << s2.size());
@@ -79,8 +95,10 @@ int main()
 	P("------------------------------Modifiers----------------------------------");
 	P("-------------------------------------------------------------------------");
 	P("________________________________Assign___________________________________");
-	s2.assign(15, "ASSIGNED");
-	f2.assign(15, "ASSIGNED");
+	s2.assign(4, "ASSIGNED");
+	f2.assign(4, "ASSIGNED");
+	show_container(s2);
+	show_container(f2);
 	P("back: " << s2.back());
 	P("back: " << f2.back());
 	P("size: " << s2.size());
@@ -90,6 +108,8 @@ int main()
 	P("size: " << f2.size());
 	s2.push_back("bonjour");
 	f2.push_back("bonjour");
+	show_container(s2);
+	show_container(f2);
 	P("back: " << s2.back());
 	P("back: " << f2.back());
 	P("size: " << s2.size());
@@ -97,6 +117,8 @@ int main()
 	P("________________________________Pop back__________________________________");
 	s2.pop_back();
 	f2.pop_back();
+	show_container(s2);
+	show_container(f2);
 	P("back: " << s2.back());
 	P("back: " << f2.back());
 	P("size: " << s2.size());
@@ -104,17 +126,20 @@ int main()
 	P("________________________________Insert__________________________________");
 	P("________________________________Erase___________________________________");
 	P("________________________________Swap___________________________________");
-	// std::string ref1 = s2.at(0);
-    // std::string ref2 = f2.at(0);
-
-	std::vector<std::string> s3(10, "yoyo");
-	ft::vector<std::string> f3(10, "yoyo");
-	s2.swap(s3);
-	f2.swap(f3);
-	P("back: " << s2.back());
-	P("back: " << f2.back());
-	P("size: " << s2.size());
-	P("size: " << f2.size());
+	std::vector<std::string> s3(6, "yoyo");
+	ft::vector<std::string> f3(6, "yoyo");
+	show_container(s3);
+	show_container(f3);
+	s.swap(s3);
+	f.swap(f3);
+	show_container(s3);
+	show_container(f3);
+	show_container(s);
+	show_container(f);
+	P("back: " << s.back());
+	P("back: " << f.back());
+	P("size: " << s.size());
+	P("size: " << f.size());
 	P("back: " << s3.back());
 	P("back: " << f3.back());
 	P("size: " << s3.size());
@@ -125,38 +150,48 @@ int main()
 	std::vector<std::string>::iterator s_iter_begin = s2.begin();
     ft::vector<std::string>::iterator f_iter_begin = f2.begin();
 	
+	show_container(s2);
+	show_container(f2);
 	P("begin = " << *s_iter_begin);
 	P("begin = " << *f_iter_begin);
 	P("________________________________End____________________________________");
 	std::vector<std::string>::iterator s_iter_end = s2.end();
     ft::vector<std::string>::iterator f_iter_end = f2.end();
 	
+	show_container(s2);
+	show_container(f2);
 	P("end = " << *s_iter_end);
 	P("end = " << *f_iter_end);
 	P("-------------------------------OPERATORS------------------------------------");
 	P("----------------------------------------------------------------------------");
     P("__________________________________==________________________________________");
-	std::vector<std::string>  s6;
-    ft::vector<std::string>  f6;
+    std::vector<std::string>  s4(s2);
+    ft::vector<std::string>  f4(f2);
 
-	s6.push_back("Pierre");
-	s6.push_back("est");
-	s6.push_back("une");
-	s6.push_back("grosse");
-	s6.push_back("conne");
+	show_container(s2);
+	show_container(f2);
+	show_container(s4);
+	show_container(f4);
+    P("operator '==' : " << (s4 == s2));
+	P("operator '==' : " << (f4 == f2));
+	P("----------------------------------------------------------------------------");
+    P("__________________________________!=________________________________________");
+	s2.push_back("diffff");
+	f2.push_back("diffff");
+	show_container(s2);
+	show_container(f2);
 
-	f6.push_back("Pierre");
-	f6.push_back("est");
-	f6.push_back("une");
-	f6.push_back("grosse");
-	f6.push_back("conne");
-
-
-
-    std::vector<std::string>  s5(s);
-    ft::vector<std::string>  f5(f);
-
-    P("operator '==' : " << (s6 == s6));
-	P("operator '==' : " << (f6 == f6));
+	show_container(s4);
+	show_container(f4);
+    P("operator '==' : " << (s4 != s2));
+	P("operator '==' : " << (f4 != f2));
+	P("----------------------------------------------------------------------------");
+    P("__________________________________<________________________________________");
+	show_container(s2);
+	show_container(f2);
+	show_container(s4);
+	show_container(f4);
+    P("operator '==' : " << (s4 < s2));
+	P("operator '==' : " << (f4 < f2));
 	return 0;
 }

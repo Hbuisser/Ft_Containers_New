@@ -86,10 +86,20 @@ namespace ft
 				return *this;
 			}
 			///////////////////////////////////////////////////// Iterators /////////////////////////////////////////
-			iterator begin(void) { return iterator(_ptr); }
-			const_iterator begin(void) const { return const_iterator(_ptr); }
-			iterator end(void) { return iterator(_ptr + _size);}
-			const_iterator end(void) const { return const_iterator(_ptr + _size); }
+			iterator begin(void) { return iterator(this->_ptr); }
+			const_iterator begin(void) const { return const_iterator(this->_ptr); }
+			iterator end(void) 
+			{
+				if (this->_size == 0)
+					return iterator(this->_ptr);
+				return iterator(this->_ptr + this->_size);
+			}
+			const_iterator end(void) const
+			{
+				if (this->_size == 0)
+					return const_iterator(this->_ptr);
+				return const_iterator(this->_ptr + this->_size);
+			}
 			// reverse_iterator rbegin(void);
 			// const_reverse_iterator rbegin(void) const;
 			// reverse_iterator rend(void);
@@ -194,6 +204,7 @@ namespace ft
 					this->reserve(this->_size + 1);
 				this->_base.construct(this->_ptr + this->_size, val);
 				this->_size = this->_size + 1;
+				
 			}
 			void pop_back() { this->resize(this->_size - 1); }
 			// iterator insert (iterator position, const value_type& val);
@@ -228,44 +239,44 @@ namespace ft
 			allocator_type getAllocator(void) const { return _base; }
 	};
 	template< class T, class Alloc >
-	//bool operator==(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs)////////////////////
 	bool operator==(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs)
 	{
 		typename ft::vector<const T>::iterator it1 = lhs.begin();
 		typename ft::vector<const T>::iterator it2 = rhs.begin();
-		size_t count = 0;
 
 		if (lhs.size() != rhs.size())
 			return false;
 		while (it1 != lhs.end())
 		{
-			if (it1 + count != it2 + count)
-			{
-				std::cout << *(it1 + count) << std::endl;
-				std::cout << *(it2 + count) << std::endl;
-				std::cout << count << std::endl; 
+			if (*it1 != *it2)
 				return false;
-			}
-			
-			count++;
+			it1++;
+			it2++;
 		}
 		return true;
 	}
-	// template< class T, class Alloc >
-	// constexpr bool operator==(const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs)
-	// {
-		
-	// }
-	// template< class T, class Alloc >
-	// bool operator!=(const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs)
-	// {
+	template< class T, class Alloc >
+	bool operator!=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs)
+	{
+		return !(lhs == rhs);
+	}
+	template< class T, class Alloc >
+	bool operator<(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs)
+	{
+		typename ft::vector<const T>::iterator it1 = lhs.begin();
+		typename ft::vector<const T>::iterator it2 = rhs.begin();
 
-	// }
-	// template< class T, class Alloc >
-	// bool operator<(const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs)
-	// {
-
-	// }
+		if (lhs.size() != rhs.size())
+			return false;
+		while (it1 != lhs.end())
+		{
+			if (*it1 < *it2)
+				return false;
+			it1++;
+			it2++;
+		}
+		return true;
+	}
 	// template< class T, class Alloc >
 	// bool operator<=(const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs)
 	// {
