@@ -11,7 +11,7 @@ namespace ft
 	struct random_access_iterator_tag {};
 
     /*Base class*/
-    template<class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
+    template< class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
     class iterator
     {
         public:
@@ -63,8 +63,8 @@ namespace ft
 	};
 
     /*legacy*/
-    // template<class Category = ft::random_access_iterator_tag(), class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
-    template<class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
+    // template<class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
+    template<class Category = ft::random_access_iterator_tag, class T = int, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
     class It
     {
         private:
@@ -114,7 +114,7 @@ namespace ft
             {
                 difference_type m;
 
-                m = this->_ptr - n._ptr;
+                m = this->_ptr - x._ptr;
                 if (m >= 0) 
                 {
                     while (m--) 
@@ -137,7 +137,7 @@ namespace ft
             bool operator>(const It & x) const { return this->_ptr > x._ptr; }
             bool operator>=(const It & x) const { return this->_ptr >= x._ptr; }
             It& operator[](difference_type n) { return *this->_ptr + n; }
-    }
+    };
 
     /*Reverse iterator*/
 	template <class Iterator> 

@@ -29,11 +29,20 @@ namespace ft
 			typedef typename allocator_type::const_reference	const_reference;
 			typedef	typename allocator_type::pointer 			pointer;
 			typedef typename allocator_type::const_pointer 		const_pointer;
+
+			// typedef Distance  difference_type;
+            // typedef Pointer   pointer;
+            // typedef Reference reference;
+            // typedef Category  iterator_category;
+			// typedef It<iterator_category, value_type, difference_type, pointer, reference>								iterator;
+
+
+			
 			typedef It<value_type>								iterator;
 			typedef It<const value_type>						const_iterator;
 			// // typedef ft::reverse_iterator<value_type>			reverse_iterator;
 			// // typedef ft::reverse_iterator<const value_type>		const_reverse_iterator;
-			typedef ft::iterator_traits<iterator>::difference_type	difference_type;
+			typedef typename ft::iterator_traits<iterator>::difference_type	difference_type;
 			typedef size_t										size_type;
 
 			/////////////////////////////////////////////////////// Constructors /////////////////////////////////
@@ -245,7 +254,7 @@ namespace ft
 		// 		return false;
 		// 	count++;
 		// }
-		// return true;
+		return true;
 	}
 	// template< class T, class Alloc >
 	// constexpr bool operator==(const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs)
