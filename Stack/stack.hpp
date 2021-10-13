@@ -16,6 +16,7 @@ namespace ft
 		private:
 			Container	_cont;
 			// comparaison lexicographique (pas la taille mais chaque elements)
+			// friend => peut acceder a la classe amie
 			friend bool operator==(const stack<value_type,container_type>& rhs) {return (_cont == rhs._cont);}
 			friend bool operator!=(const stack<value_type,container_type>& rhs) {return (_cont != rhs._cont);} 
 			friend bool operator<(const stack<value_type,container_type>& rhs) {return (_cont < rhs._cont);} 
@@ -44,8 +45,6 @@ namespace ft
 			////////////////// Modifiers ////////////////////////////////////
 			void push( const value_type& value ) { _cont.push_back(value); _size++; }
 			void pop() { _cont.pop_back(); _size--; }
-
-			////////////////// Overloads ////////////////////////////////////////////
 			
 	};
 }
