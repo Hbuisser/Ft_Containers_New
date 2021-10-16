@@ -125,10 +125,10 @@ int main()
 	P("back: " << f2.back());
 	P("size: " << s2.size());
 	P("size: " << f2.size());
-	s2.pop_back();
-	f2.pop_back();
-	show_container(s2);
-	show_container(f2);
+	// s2.pop_back();
+	// f2.pop_back();
+	// show_container(s2);
+	// show_container(f2);
 	P("________________________________Insert__________________________________");
 	P("________________________________Erase___________________________________");
 	P("________________________________Swap___________________________________");
@@ -223,13 +223,13 @@ int main()
 	show_container(f4);
     P("operator '>' : " << (s4 > s2));
 	P("operator '>' : " << (f4 > f2));
-	s4.pop_back();
-	f4.pop_back();
+	P("----------------------------------------------------------------------------");
+    P("__________________________________>=________________________________________");
 	show_container(s2);
 	show_container(f2);
 	show_container(s4);
 	show_container(f4);
-	P("operator '>' : " << (s4 <= s2));
-	P("operator '>' : " << (f4 <= f2));
+    P("operator '>' : " << (s4 >= s2));
+	P("operator '>' : " << (f4 >= f2));
 	return 0;
 }

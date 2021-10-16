@@ -63,7 +63,8 @@ namespace ft
 			virtual ~vector()
 			{
 				this->clear();
-				this->_base.deallocate(this->_ptr, this->_capacity);
+				if (this->_ptr != NULL)
+					this->_base.deallocate(this->_ptr, this->_capacity);
 			}
 			vector & operator=(const vector & x)
 			{
@@ -157,6 +158,7 @@ namespace ft
 						this->_base.destroy(this->_ptr + i);
 						i++;
 					}
+					this->_size = n;
 				}
 				this->_size = n;
 			}
@@ -205,7 +207,15 @@ namespace ft
 				this->_base.construct(this->_ptr + this->_size, val);
 				this->_size = this->_size + 1;
 			}
-			void pop_back() { this->resize(this->_size - 1); }
+			void pop_back() 
+			{ 
+				if (this->_size > 0)
+				{
+					_base.destroy(_ptr + (this->_size - 1));
+					this->_size--;
+					std::cout << _size << std::endl;
+				}
+			}
 			// iterator insert (iterator position, const value_type& val);
 			// void insert (iterator position, size_type n, const value_type& val);
 			// template <class InputIterator>
@@ -296,11 +306,11 @@ namespace ft
 	{
 		return !(lhs < rhs);
 	}
-	// template< class T, class Alloc >
-	// bool operator>=(const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs)
-	// {
-
-	// }
+	template< class T, class Alloc >
+	bool operator>=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs)
+	{
+		return !(lhs <= rhs);
+	}
 }
 
 
