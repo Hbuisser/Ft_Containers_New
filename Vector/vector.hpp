@@ -12,6 +12,75 @@
 
 namespace ft
 {
+	/*  --- ENABLE_IF --- */
+    template<bool Cond, class T = void>
+    struct enable_if {};
+    /*  --- SPECIALIZED ENABLE_IF IF first param is True / if not, typedef doesn't work and constructor cannot be implemented --- */
+    template<class T>
+    struct enable_if<true, T> // enable_if<bool, var>
+    { typedef T type; };
+
+    /* --- IS_INTEGRAL --- */
+    template <class T, T v>
+    struct integral_constant
+    {
+        static const T value = v;   // true or false vu qu'on passe un bool
+        typedef T                       value_type;
+        typedef integral_constant<T, v> type;
+        operator T() { return v; }
+
+    };
+	template <class T>
+    struct is_integral : public ft::integral_constant<bool, false> {};
+
+    template<> struct is_integral<bool> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<char> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<char16_t> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<char32_t> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<wchar_t> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<signed char> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<short int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<long int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<long long int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<unsigned char> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<unsigned short int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<unsigned int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<unsigned long int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<unsigned long long int> : public ft::integral_constant<bool, true> {};
+    // const
+    template<> struct is_integral<const bool> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const char> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const char16_t> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const char32_t> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const wchar_t> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const signed char> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const short int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const long int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const long long int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const unsigned char> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const unsigned short int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const unsigned int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const unsigned long int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<const unsigned long long int> : public ft::integral_constant<bool, true> {};
+    // volatile
+    template<> struct is_integral<volatile bool> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile char> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile char16_t> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile char32_t> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile wchar_t> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile signed char> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile short int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile long int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile long long int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile unsigned char> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile unsigned short int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile unsigned int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile unsigned long int> : public ft::integral_constant<bool, true> {};
+    template<> struct is_integral<volatile unsigned long long int> : public ft::integral_constant<bool, true> {};
+
 	template < class T, class Alloc = std::allocator<T> >
 	class vector 
 	{
@@ -49,12 +118,25 @@ namespace ft
 					i++;
 				}
 			}
-			template<typename InputIterator> 
-			vector(InputIterator first, InputIterator last)
-			{
-				this->_size = 0;
-				// assign(first, last);
-			}
+			// if ft::enable_if<>::type is not defined (if InputIterator is an integral type), then
+            // the template is not valid and the program will know to use the -FILL constructor-
+            template < class InputIterator >
+            vector(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = NULL)
+            {
+                long    distance = std::distance(first, last);
+                int     i;
+
+                this->_ptr = this->_allocator.allocate(distance);
+                this->_capacity = distance;
+                this->_size = distance;
+                i = 0;
+                while (first != last)
+                {
+                    this->_allocator.construct(this->_ptr + i, *first);
+                    first++;
+                    i++;
+                }
+            }
 			vector(const vector &x) : _base(allocator_type()), _size(x._size), _capacity(x._capacity) 
 			{
 				this->_ptr = this->_base.allocate(0);
@@ -158,7 +240,6 @@ namespace ft
 				if (n > this->_size)
 				{
 					this->reserve(n);
-					////////////
 					i = this->_size;
 					while (i < n)
 					{
@@ -199,8 +280,12 @@ namespace ft
 			reference back() { return *(this->_ptr + this->_size - 1); }
 			const_reference back() const { return *(this->_ptr + this->_size - 1); }
 			//////////////////////////////////////////////////////// Modifiers /////////////////////////////////////
-			// template <class InputIterator>
-  			// void assign(InputIterator first, InputIterator last);
+			template <class InputIterator>
+  			void assign(InputIterator first, InputIterator last)
+			{
+
+			}
+			
 			void assign(size_type n, const value_type& val)
 			{
 				size_t i = 0;
