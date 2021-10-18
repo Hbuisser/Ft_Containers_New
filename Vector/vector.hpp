@@ -65,6 +65,7 @@ namespace ft
     template<> struct is_integral<const unsigned long int> : public ft::integral_constant<bool, true> {};
     template<> struct is_integral<const unsigned long long int> : public ft::integral_constant<bool, true> {};
     // volatile
+	// https://stackoverflow.com/questions/4437527/why-do-we-use-volatile-keyword
     template<> struct is_integral<volatile bool> : public ft::integral_constant<bool, true> {};
     template<> struct is_integral<volatile char> : public ft::integral_constant<bool, true> {};
     template<> struct is_integral<volatile char16_t> : public ft::integral_constant<bool, true> {};
@@ -151,20 +152,16 @@ namespace ft
 			vector & operator=(const vector & x)
 			{
 				size_t i = 0;
-
-				// if (*this != &x)
+				this->clear();
+				this->_base.deallocate(this->_ptr, this->_capacity);
+				this->_ptr = this->_base.allocate(x._capacity);
+				while (i < x._size)
 				{
-					this->clear();
-					this->_base.deallocate(this->_ptr, this->_capacity);
-					this->_ptr = this->_base.allocate(x._capacity);
-					while (i < x._size)
-					{
-						this->_base.construct(this->_ptr + i, *(x._ptr + i));
-						i++;
-					}
-					this->_size = x._size;
-					this->_capacity = x._capacity;
+					this->_base.construct(this->_ptr + i, *(x._ptr + i));
+					i++;
 				}
+				this->_size = x._size;
+				this->_capacity = x._capacity;
 				return *this;
 			}
 			///////////////////////////////////////////////////// Iterators /////////////////////////////////////////
@@ -317,8 +314,83 @@ namespace ft
 					std::cout << _size << std::endl;
 				}
 			}
-			// iterator insert (iterator position, const value_type& val);
-			// void insert (iterator position, size_type n, const value_type& val);
+			iterator insert(iterator position, const value_type& val)
+			{
+				if (position == this->end())
+				{
+					push_back(val);
+					return (position);
+				}
+				else
+				{
+					value_type *new_array;
+					int new_capacity;
+					if (this->_size == this->_capacity)
+					{
+						new_capacity = this->_capacity * 2;
+						new_array = _alloc.allocate(new_capacity);
+					}
+					else
+					{
+						new_capacity = this->_capacity;
+						new_array = _alloc.allocate(new_capacity);
+					}
+					int i = 0;
+					iterator it = this->begin();
+					for ( ; it != position; it++)
+						_alloc.construct(new_array + i++, *it);
+					int return_i = i;
+					// add new element
+					_alloc.construct(new_array + i++, val);
+					for ( ; it != this->end(); it++)
+						_alloc.construct(new_array + i++, *it);
+					int new_size = this->_size + 1;
+					this->clear();
+					_alloc.deallocate(_ptr, this->_capacity);
+					_array = new_array;
+					this->_size = new_size;
+					this->_capacity = new_capacity;
+					return (this->begin() + return_i);
+				}
+			}
+			void insert(iterator position, size_type n, const value_type& val)
+			{
+				if (position == this->end())
+				{
+					for (int i = 0; i < n; i++)
+						push_back(val);
+				}
+				else
+				{
+					value_type *new_array;
+					int new_capacity;
+					if (this->_size + n > this->_capacity)
+					{
+						new_capacity = this->_capacity + (n * 2);
+						new_array = _alloc.allocate(new_capacity);
+					}
+					else
+					{
+						new_capacity = this->_capacity;
+						new_array = _alloc.allocate(new_capacity);
+					}
+					int i = 0;
+					iterator it = this->begin();
+					for ( ; it != position; it++)
+						_alloc.construct(new_array + i++, *it);
+					// add new elements
+					for (int j = 0; j < n; j++)
+						_alloc.construct(new_array + i++, val);
+					for ( ; it != this->end(); it++)
+						_alloc.construct(new_array + i++, *it);
+					int new_size = this->_size += n;
+					this->clear();
+					_alloc.deallocate(this->_ptr, this->_capacity);
+					_ptr = new_array;
+					this->_size = new_size;
+					this->_capacity = new_capacity;					
+				}
+			}
 			// template <class InputIterator>
 			// void insert (iterator position, InputIterator first, InputIterator last);
 			// iterator erase (iterator position);
