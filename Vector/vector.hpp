@@ -23,18 +23,18 @@ namespace ft
 
         public:
             /////////////////////////////////////////////////////// Typedef /////////////////////////////////////
-			typedef T											value_type;
-			typedef Alloc   									allocator_type;
-			typedef typename allocator_type::reference			reference;
-			typedef typename allocator_type::const_reference	const_reference;
-			typedef	typename allocator_type::pointer 			pointer;
-			typedef typename allocator_type::const_pointer 		const_pointer;			
-			typedef It<value_type>								iterator;
-			typedef It<const value_type>						const_iterator;
-			typedef ft::reverse_iterator<value_type>				reverse_iterator;
-			typedef ft::reverse_iterator<const value_type>			const_reverse_iterator;
+			typedef T															value_type;
+			typedef Alloc   													allocator_type;
+			typedef typename allocator_type::reference							reference;
+			typedef typename allocator_type::const_reference					const_reference;
+			typedef	typename allocator_type::pointer 							pointer;
+			typedef typename allocator_type::const_pointer 						const_pointer;			
+			typedef It<value_type>												iterator;
+			typedef It<const value_type>										const_iterator;
+			typedef ft::reverse_iterator<iterator>								reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>						const_reverse_iterator;
 			typedef typename ft::iterator_traits<iterator>::difference_type		difference_type;
-			typedef size_t										size_type;
+			typedef size_t														size_type;
 
 			/////////////////////////////////////////////////////// Constructors /////////////////////////////////
 			explicit vector(const allocator_type& alloc = allocator_type()) : _base(alloc), _size(0), _capacity(0) { this->_ptr = this->_base.allocate(0); }
@@ -88,7 +88,7 @@ namespace ft
 			///////////////////////////////////////////////////// Iterators /////////////////////////////////////////
 			iterator begin(void) { return iterator(this->_ptr); }
 			const_iterator begin(void) const { return const_iterator(this->_ptr); }
-			iterator end(void) 
+			iterator end(void)
 			{
 				if (this->_size == 0)
 					return iterator(this->_ptr);
@@ -100,10 +100,26 @@ namespace ft
 					return const_iterator(this->_ptr);
 				return const_iterator(this->_ptr + this->_size);
 			}
-			// reverse_iterator rbegin(void);
-			// const_reverse_iterator rbegin(void) const;
-			// reverse_iterator rend(void);
-			// const_reverse_iterator rend(void) const;
+			reverse_iterator rbegin()
+			{
+				if (!this->_size)
+					return (reverse_iterator(this->_ptr));
+				return (reverse_iterator(this->_ptr + this->_size - 1));
+			}
+			const_reverse_iterator rbegin() const 
+			{
+				if (!this->_size)
+					return (const_reverse_iterator(this->_ptr));
+				return (const_reverse_iterator(this->_ptr + this->_size - 1));
+			}
+			reverse_iterator rend()
+			{ 
+				return reverse_iterator(this->_ptr - 1);
+			}
+			const_reverse_iterator rend() const
+			{ 
+				return const_reverse_iterator(this->_ptr - 1);
+			}
 			/////////////////////////////////////////////////////// Capacity /////////////////////////
 			size_t size(void) const { return this->_size; }
 			size_t max_size(void) const { return this->_base.max_size(); }
@@ -312,6 +328,5 @@ namespace ft
 		return !(lhs <= rhs);
 	}
 }
-
 
 #endif

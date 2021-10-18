@@ -160,7 +160,7 @@ int main()
 	show_container(f2);
 	P("begin = " << *s_iter_begin);
 	P("begin = " << *f_iter_begin);
-	P("________________________________End____________________________________");
+	P("________________________________End_______________________________________");
 	std::vector<std::string>::iterator s_iter_end = s2.end();
     ft::vector<std::string>::iterator f_iter_end = f2.end();
 	
@@ -168,6 +168,23 @@ int main()
 	show_container(f2);
 	P("end = " << *s_iter_end);
 	P("end = " << *f_iter_end);
+	P("_______________________________reverse_____________________________________");
+	std::vector<std::string>::reverse_iterator s_iter_rev = s2.rbegin();
+    ft::vector<std::string>::reverse_iterator f_iter_rev = f2.rbegin();
+
+	bool good = true;
+	for (; s_iter_rev != s2.rend(); s_iter_rev++)
+	{
+		if (*s_iter_rev != *f_iter_rev)
+			good = false;
+		f_iter_rev++;
+	}
+	P("reverse = " << good);
+    // P("size = " << s2.size() << " | " << f2.size() << verif(s2.size() == f2.size()));
+    // P("front = " << s2.front() << " | " << f2.front() << verif(s2.front() == f2.front()));
+    // P("back = " << s2.back() << " | " << f2.back() << verif(s2.back() == f2.back()));
+	// P("");
+	// P("");
 	P("-------------------------------OPERATORS------------------------------------");
 	P("----------------------------------------------------------------------------");
     P("__________________________________==________________________________________");
