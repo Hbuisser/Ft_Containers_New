@@ -125,10 +125,10 @@ int main()
 	P("back: " << f2.back());
 	P("size: " << s2.size());
 	P("size: " << f2.size());
-	// s2.pop_back();
-	// f2.pop_back();
-	// show_container(s2);
-	// show_container(f2);
+	s2.pop_back();
+	f2.pop_back();
+	show_container(s2);
+	show_container(f2);
 	P("________________________________Insert__________________________________");
 	P("________________________________Erase___________________________________");
 	P("________________________________Swap___________________________________");
@@ -169,22 +169,28 @@ int main()
 	P("end = " << *s_iter_end);
 	P("end = " << *f_iter_end);
 	P("_______________________________reverse_____________________________________");
-	std::vector<std::string>::reverse_iterator s_iter_rev = s2.rbegin();
-    ft::vector<std::string>::reverse_iterator f_iter_rev = f2.rbegin();
+	std::vector<std::string>::reverse_iterator s_iter_rev = s2.rend();
+    ft::vector<std::string>::reverse_iterator f_iter_rev = f2.rend();
 
-	bool good = true;
-	for (; s_iter_rev != s2.rend(); s_iter_rev++)
-	{
-		if (*s_iter_rev != *f_iter_rev)
-			good = false;
-		f_iter_rev++;
-	}
-	P("reverse = " << good);
-    // P("size = " << s2.size() << " | " << f2.size() << verif(s2.size() == f2.size()));
-    // P("front = " << s2.front() << " | " << f2.front() << verif(s2.front() == f2.front()));
-    // P("back = " << s2.back() << " | " << f2.back() << verif(s2.back() == f2.back()));
-	// P("");
-	// P("");
+	P(*s_iter_rev);
+	P(*f_iter_rev);
+	// bool good = true;
+	// int count = 0;
+	// P("reverse begin = " << good);
+	// for (; s_iter_rev != s2.rbegin(); s_iter_rev++)
+	// {
+	// 	if (*s_iter_rev != *f_iter_rev)
+	// 	{
+	// 		good = false;
+	// 		count++;
+	// 		// break;
+	// 		P("reverse s = " << *s_iter_rev);
+	// 		P("reverse f = " << *f_iter_rev);
+	// 	}
+	// 	s_iter_rev++;
+	// 	f_iter_rev++;
+	// }
+	// P("reverse end = " << good << "-" << count << "-" << *f_iter_rev);
 	P("-------------------------------OPERATORS------------------------------------");
 	P("----------------------------------------------------------------------------");
     P("__________________________________==________________________________________");

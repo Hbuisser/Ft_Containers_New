@@ -193,7 +193,7 @@ namespace ft
 			}
 			reverse_iterator rend()
 			{ 
-				return reverse_iterator(this->_ptr - 1);
+				return reverse_iterator(this->_ptr);
 			}
 			const_reverse_iterator rend() const
 			{ 
@@ -282,7 +282,6 @@ namespace ft
 			{
 
 			}
-			
 			void assign(size_type n, const value_type& val)
 			{
 				size_t i = 0;
@@ -309,92 +308,25 @@ namespace ft
 			{ 
 				if (this->_size > 0)
 				{
-					_base.destroy(_ptr + (this->_size - 1));
+					_base.destroy(this->_ptr + (this->_size - 1));
 					this->_size--;
-					std::cout << _size << std::endl;
 				}
 			}
 			iterator insert(iterator position, const value_type& val)
 			{
-				if (position == this->end())
-				{
-					push_back(val);
-					return (position);
-				}
-				else
-				{
-					value_type *new_array;
-					int new_capacity;
-					if (this->_size == this->_capacity)
-					{
-						new_capacity = this->_capacity * 2;
-						new_array = _alloc.allocate(new_capacity);
-					}
-					else
-					{
-						new_capacity = this->_capacity;
-						new_array = _alloc.allocate(new_capacity);
-					}
-					int i = 0;
-					iterator it = this->begin();
-					for ( ; it != position; it++)
-						_alloc.construct(new_array + i++, *it);
-					int return_i = i;
-					// add new element
-					_alloc.construct(new_array + i++, val);
-					for ( ; it != this->end(); it++)
-						_alloc.construct(new_array + i++, *it);
-					int new_size = this->_size + 1;
-					this->clear();
-					_alloc.deallocate(_ptr, this->_capacity);
-					_array = new_array;
-					this->_size = new_size;
-					this->_capacity = new_capacity;
-					return (this->begin() + return_i);
-				}
+
 			}
 			void insert(iterator position, size_type n, const value_type& val)
 			{
-				if (position == this->end())
-				{
-					for (int i = 0; i < n; i++)
-						push_back(val);
-				}
-				else
-				{
-					value_type *new_array;
-					int new_capacity;
-					if (this->_size + n > this->_capacity)
-					{
-						new_capacity = this->_capacity + (n * 2);
-						new_array = _alloc.allocate(new_capacity);
-					}
-					else
-					{
-						new_capacity = this->_capacity;
-						new_array = _alloc.allocate(new_capacity);
-					}
-					int i = 0;
-					iterator it = this->begin();
-					for ( ; it != position; it++)
-						_alloc.construct(new_array + i++, *it);
-					// add new elements
-					for (int j = 0; j < n; j++)
-						_alloc.construct(new_array + i++, val);
-					for ( ; it != this->end(); it++)
-						_alloc.construct(new_array + i++, *it);
-					int new_size = this->_size += n;
-					this->clear();
-					_alloc.deallocate(this->_ptr, this->_capacity);
-					_ptr = new_array;
-					this->_size = new_size;
-					this->_capacity = new_capacity;					
-				}
+
 			}
-			// template <class InputIterator>
-			// void insert (iterator position, InputIterator first, InputIterator last);
-			// iterator erase (iterator position);
-			// iterator erase (iterator first, iterator last);
+			template <class InputIterator>
+			void insert(iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = NULL)
+			{
+
+			}
+			// iterator erase(iterator position);
+			// iterator erase(iterator first, iterator last);
 			void swap(vector& x)
 			{
 				vector tmp;
