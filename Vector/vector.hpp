@@ -12,20 +12,84 @@
 
 namespace ft
 {
+	/*  --- PAIR --- */
+	template< class T1, class T2 >
+	struct pair
+	{
+		typedef T1 first_type;
+		typedef T2 second_type;
+
+		first_type	first;
+		second_type	second;
+		pair(void) : first(), second() {}
+		template <class U, class V>
+		pair(const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
+		pair(const first_type& a, const second_type& b) : first(a), second(b) {}
+		pair& operator=(const pair& pr)
+		{
+			if (this != &pr)
+			{
+				this->first = pr.first;
+				this->second = pr.second;
+			}
+			return (*this);
+		}
+	};
+	template < class T1, class T2 >
+	bool operator==(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) 
+	{
+		return (lhs.first == rhs.first && lhs.second == rhs.second);
+	}
+	template < class T1, class T2 >
+	bool operator!=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) 
+	{
+		return (!(lhs == rhs));
+	}
+	template < class T1, class T2 >
+	bool operator<(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) 
+	{
+		return (lhs.first < rhs.first || (!(rhs.first < lhs.first) && lhs.second < rhs.second));
+	}
+	template < class T1, class T2 >
+	bool operator<=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
+	{
+		return (!(rhs < lhs));
+	}
+	template < class T1, class T2 >
+	bool operator>(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
+	{
+		return (rhs < lhs);
+	}
+	template < class T1, class T2 >
+	bool operator>=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) 
+	{
+		return (!(lhs < rhs));
+	}
+
+	/* --- MAKE PAIR --- */
+	template < class T1, class T2 >
+	pair<T1, T2> make_pair(const T1& x, const T2& y) 
+	{
+		return (pair<T1, T2>(x, y));
+	}
+
 	/*  --- ENABLE_IF --- */
     template<bool Cond, class T = void>
     struct enable_if {};
-    /*  --- SPECIALIZED ENABLE_IF IF first param is True / if not, typedef doesn't work and constructor cannot be implemented --- */
+    // specialized enable_if if first param is True 
+	// if not, typedef doesn't work and constructor cannot be implemented
     template<class T>
     struct enable_if<true, T> // enable_if<bool, var>
-    { typedef T type; };
+    { 
+		typedef T type;
+	};
 
     /* --- IS_INTEGRAL --- */
     template <class T, T v>
     struct integral_constant
     {
         static const T value = v;   // true or false vu qu'on passe un bool
-        typedef T                       value_type;
+        typedef T value_type;
         typedef integral_constant<T, v> type;
         operator T() { return v; }
 
@@ -98,7 +162,7 @@ namespace ft
 			typedef typename allocator_type::reference							reference;
 			typedef typename allocator_type::const_reference					const_reference;
 			typedef	typename allocator_type::pointer 							pointer;
-			typedef typename allocator_type::const_pointer 						const_pointer;			
+			typedef typename allocator_type::const_pointer 						const_pointer;	
 			typedef It<value_type>												iterator;
 			typedef It<const value_type>										const_iterator;
 			typedef ft::reverse_iterator<iterator>								reverse_iterator;
@@ -107,8 +171,8 @@ namespace ft
 			typedef size_t														size_type;
 
 			/////////////////////////////////////////////////////// Constructors /////////////////////////////////
-			explicit vector(const allocator_type& alloc = allocator_type()) : _base(alloc), _size(0), _capacity(0) { this->_ptr = this->_base.allocate(0); }
-			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _base(alloc), _size(n), _capacity(n)
+			explicit vector(const allocator_type& alloc = allocator_type()) : _base(alloc), _size(0), _capacity(5) { this->_ptr = this->_base.allocate(5); }
+			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _base(alloc), _size(n), _capacity(n * 2)
 			{
 				this->_ptr = this->_base.allocate(n);
 				size_t i = 0;
@@ -308,8 +372,12 @@ namespace ft
 			{ 
 				if (this->_size > 0)
 				{
+					std::cout << *(this->_ptr + (this->_size - 1)) << std::endl;
+					std::cout << *(this->_ptr) << std::endl;
 					_base.destroy(this->_ptr + (this->_size - 1));
+					std::cout << "destructed" << *(this->_ptr + (this->_size - 1)) << std::endl;
 					this->_size--;
+					std::cout << *(this->_ptr + (this->_size - 2)) << std::endl;
 				}
 			}
 			iterator insert(iterator position, const value_type& val)
